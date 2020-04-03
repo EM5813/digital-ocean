@@ -44,3 +44,8 @@ cd /var/www
 
 
 sudo nano __init__.py  <-- makes a file becausae there is no vim. your starting fom scratch
+
+
+# Install Git
+
+sudo apt-get install -y git
