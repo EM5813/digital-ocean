@@ -1,2 +1,105 @@
 
 # https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-uwsgi-and-nginx-on-ubuntu-16-04
+
+
+1. Install the repositories
+
+    
+       pip install uwsgi flask
+
+
+
+2. Create a python virtual
+
+3. Set Up the Flask app
+
+
+4. Create a WSGI (server) entry point.
+
+    make a file:
+
+
+
+    nano ~/myproject/wsgi.py
+  
+    then
+
+    # Configure wsgi code: uwsgi --socket 0.0.0.0:5000 --protocol=http -w wsgi:app
+
+6. Create a WSGI configuration file
+
+    nano ~/myproject/myproject.ini
+    
+ 
+ ## code for the configuration file
+    [uwsgi]
+module = wsgi:app
+
+master = true
+processes = 5
+
+socket = myproject.sock
+chmod-socket = 660
+vacuum = true
+
+die-on-term = true
+    
+    
+    
+
+
+7. create a unit system file
+
+  sudo nano /etc/systemd/system/myproject.service
+  
+  
+  [Unit]
+Description=uWSGI instance to serve myproject
+After=network.target
+
+[Service]
+User=sammy
+Group=www-data
+WorkingDirectory=/home/sammy/myproject
+Environment="PATH=/home/sammy/myproject/myprojectenv/bin"
+ExecStart=/home/sammy/myproject/myprojectenv/bin/uwsgi --ini myproject.ini
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+# We can now start the uWSGI service we created and enable it so that it starts at boot:
+sudo systemctl start myproject
+sudo systemctl enable myproject
+
+
+
+8.  Configuring Nginx to Proxy Requests
+
+sudo nano /etc/nginx/sites-available/myproject
+
+
+server {
+    listen 80;
+    server_name server_domain_or_IP;
+
+    location / {
+        include uwsgi_params;
+        uwsgi_pass unix:/home/sammy/myproject/myproject.sock;
+    }
+}
+
+
+# enable the nginx server block configuartion 
+sudo ln -s /etc/nginx/sites-available/myproject /etc/nginx/sites-enabled
+
+
+# check for syntax errors:
+sudo nginx -t
+    
+    
+    
+ # your new config:
+ sudo systemctl restart nginx
+    
