@@ -36,3 +36,7 @@ WSGIRestrictEmbedded On
 
 
 # sudo python __init__.py  <-- test if the main module is running
+
+
+
+sudo nano __init__.py  <-- makes a file becausae there is no vim. your starting fom scratch
