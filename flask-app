@@ -33,3 +33,6 @@ ErrorLog /var/www/html/flasktest/error.log
 </Directory>
 </VirtualHost>
 WSGIRestrictEmbedded On
+
+
+# sudo python __init__.py  <-- test if the main module is running
