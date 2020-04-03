@@ -4,3 +4,30 @@
 
 # LAMP # https://www.digitalocean.com/community/tutorials/how-to-install-linux-apache-mysql-php-lamp-stack-ubuntu-18-04
 
+
+# The Structure:
+
+|----FlaskApp
+|---------FlaskApp
+|--------------static
+|--------------templates
+
+
+#
+
+Apache:
+
+<VirtualHost *:80>
+ServerName http://127.0.0.1 <------ point to the IP address
+WSGIScriptAlias /flasktest /var/www/html/flasktest/flasktest.wsgi
+WSGIPythonPath /usr/lib64/
+WSGIDaemonProcess flasktest
+ErrorLog /var/www/html/flasktest/error.log
+<Directory /var/www/html/flasktest>
+  WSGIProcessGroup flasktest
+  WSGIApplicationGroup %{GLOBAL} 
+  Order deny,allow
+        Allow from all
+</Directory>
+</VirtualHost>
+WSGIRestrictEmbedded On
